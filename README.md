@@ -1,8 +1,19 @@
 # 🚀 项目简介 | Project Overview
 
-RAG Knowledge Assistant 系统基于 **Milvus + BGE-M3 + BGE-Reranker-v2-M3 + Qwen2.5** 构建的本地化 Retrieval-Augmented Generation（RAG）知识助手。
+RAG Knowledge Assistant 是系统基于 **Milvus + BGE-M3 + BGE-Reranker-v2-M3 + Qwen2.5** 构建的本地化 Retrieval-Augmented Generation（RAG）知识助手。
 
-项目实现了从文档加载、向量化存储、语义检索、重排序、大模型生成到引用溯源（Citation）的完整 RAG Pipeline，可作为企业知识库问答系统的基础框架。
+该项目实现了完整的RAG流程，包含：
+
+* 治理后知识资产加载（Governed JSONL）
+* 多文档知识库构建
+* 批量数据导入流水线
+* 向量嵌入生成
+* 基于Milvus的向量存储
+* 语义检索与重排序
+* 基于元数据的检索过滤
+* 大模型答案生成与引用溯源 
+
+它可作为企业级知识库问答系统的基础框架。
 
 A local Retrieval-Augmented Generation (RAG) Knowledge Assistant built with:
 
@@ -11,9 +22,18 @@ A local Retrieval-Augmented Generation (RAG) Knowledge Assistant built with:
 * BGE-Reranker-v2-M3
 * Qwen2.5
 
-The project implements a complete RAG pipeline including document ingestion, embedding generation, vector storage, semantic retrieval, reranking, answer generation, and citation tracing.
+The project implements a complete RAG pipeline including:
 
-It can serve as a foundation for enterprise knowledge base Q&A systems.
+* Document ingestion and governance-ready asset loading
+* Multi-document knowledge base construction
+* Batch ingestion pipeline
+* Embedding generation
+* Vector storage with Milvus
+* Semantic retrieval and reranking
+* Metadata-aware retrieval
+* Answer generation and citation tracing
+
+It can serve as a foundation for enterprise knowledge base Q&A systems. 
 
 ---
 
@@ -72,7 +92,9 @@ RAG Knowledge Assistant
 
 The system consumes governance-ready knowledge assets
 and provides enterprise knowledge retrieval,
-reranking, answer generation, and citation tracing.
+reranking, answer generation, and citation tracing. 
+
+---
 
 # 🏗️ 系统架构  | System Architecture
 
@@ -82,24 +104,16 @@ reranking, answer generation, and citation tracing.
 
 # ✨ 项目亮点
 
-* 🔒 **完全本地化部署**（Ollama + Milvus）
-* 📄 **支持文档知识库构建**
-* 🔍 **BGE-M3 语义检索**
-* 🎯 **BGE-Reranker-v2-M3 重排序**
-* 🤖 **Qwen2.5 大模型回答生成**
-* 📚 **Citation 引用溯源**
-* 🌐 **FastAPI REST API 服务化**
-* 📖 **Swagger 自动接口文档**
-
-
-* Fully local deployment
-* Vector search powered by Milvus
-* BGE-M3 semantic retrieval
-* BGE-Reranker-v2-M3 reranking
-* Qwen2.5 answer generation
-* Citation-based explainability
-* FastAPI REST service
-* Swagger API documentation
+* 🔒 完全本地化部署（Ollama + Milvus）| Fully Local RAG Deployment (Ollama + Milvus)
+* 📚 多文档知识库构建 | Multi-Document Knowledge Base
+* ⚡ 批量数据导入流水线 | Batch Ingestion Pipeline
+* 🗂 集合管理 | Collection Management
+* 🏷 元数据过滤 | Metadata Filtering
+* 🔍 BGE-M3 语义检索 | Semantic Retrieval with BGE-M3
+* 🎯 BGE-Reranker-v2-M3 重排序 | Reranking with BGE-Reranker-v2-M3
+* 🤖 Qwen2.5 大模型回答生成 | LLM-based Answer Generation with Qwen2.5
+* 📖 Citation 引用溯源 | Citation Tracking and Source Attribution
+* 🌐 FastAPI REST API 服务化 | FastAPI-based RESTful API Service  
 
 ---
 
@@ -121,26 +135,34 @@ reranking, answer generation, and citation tracing.
 # 🔄 工作流 | RAG Workflow
 
 ```text
-Governed JSONL
-    ↓
+Governed JSONL Files
+↓
+Batch Ingestion Pipeline
+↓
 JSONL Loader
-    ↓
+↓
 Chunk Objects
-    ↓
+↓
 Embedding (BGE-M3)
-    ↓
-Milvus Vector Store
-    ↓
+↓
+Milvus Collection
+↓
+Metadata Filtering
+↓
 Semantic Retrieval
-    ↓
+↓
 Reranking (BGE-Reranker-v2-M3)
-    ↓
+↓
 Qwen2.5
-    ↓
+↓
 Answer + Citation
-```
+``` 
+Multiple governed documents can be ingested into a single Milvus collection,
+forming a unified knowledge base while preserving document-level metadata.
 
 ---
+
+
 
 # 💡 例子 | Example
 
@@ -256,8 +278,40 @@ Configure the local model path in:
 ```python
 retriever/reranker.py
 ```
+## 5. Prepare Knowledge Assets
 
-## 5. Run Application
+#### Place governed JSONL files into:
+
+data/governed_docs/
+
+#### Example:
+
+data/governed_docs/
+
+├── strategy_meeting.jsonl 
+
+├── annual_report.jsonl 
+
+├── product_plan.jsonl  
+
+
+## 6. Build Knowledge Base
+
+#### Run batch ingestion:
+
+python -m tests.test_batch_ingestion
+
+#### This step will:
+
+Load multiple governed JSONL documents 
+
+Generate embeddings with BGE-M3 
+
+Store vectors in Milvus 
+
+Build a unified multi-document knowledge base 
+
+## 7. Run Application
 
 ```bash
 python main.py
@@ -282,10 +336,10 @@ python main.py
 
 ## v1.1.0
 
-* [ ] Multi-document Knowledge Base
-* [ ] Batch Ingestion Pipeline
-* [ ] Collection Management
-* [ ] Metadata Filtering
+* [√] Multi-document Knowledge Base
+* [√] Batch Ingestion Pipeline
+* [√] Collection Management
+* [√] Metadata Filtering
 
 ## v1.2.0
 

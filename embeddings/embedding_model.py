@@ -45,5 +45,4 @@ class EmbeddingModel:
     def embedding_dim(self):
         if self._embedding_dim is None:
             self._embedding_dim = len(self.encode(["test"])[0])
-
         return self._embedding_dim

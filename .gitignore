@@ -6,7 +6,6 @@ __pycache__/
 .Python
 venv/
 .env
-test.py
 
 # IDE
 .vscode/

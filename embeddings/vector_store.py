@@ -14,14 +14,20 @@ class VectorStore:
         self.collection_name = collection_name
         self.client = MilvusClient(uri=uri)
 
+    def has_collection(self):
+        return self.client.has_collection(
+            collection_name=self.collection_name
+    )
+
+    def list_collections(self):
+        return self.client.list_collections()
+    
     def create_collection(self, dim: int = 1024):
         """
         创建 Collection。
         """
 
-        if self.client.has_collection(
-            collection_name=self.collection_name
-        ):
+        if self.has_collection():
             print(
                 f"Collection '{self.collection_name}' already exists."
             )
@@ -143,9 +149,7 @@ class VectorStore:
         删除 Collection
         """
 
-        if self.client.has_collection(
-                collection_name=self.collection_name):
-
+        if self.has_collection():
             self.client.drop_collection(
                 collection_name=self.collection_name
             )
@@ -161,16 +165,37 @@ class VectorStore:
     def search(
         self,
         query_embedding: list[float],
-        top_k: int = 3
+        top_k: int = 3,
+        category: str | None = None,
+        title: str | None = None
     ):
+
         """
         Milvus语义检索
         """
+        filter_expr = None
+
+        filters = []
+
+        if category:
+            filters.append(
+                f'category == "{category}"'
+            )
+
+        if title:
+            filters.append(
+                f'title == "{title}"'
+            )
+
+        if filters:
+            filter_expr = " and ".join(filters)
+
 
         results = self.client.search(
             collection_name=self.collection_name,
             data=[query_embedding],
             limit=top_k,
+            filter=filter_expr,
             search_params={
                 "metric_type": "COSINE"
             },
@@ -202,3 +227,4 @@ class VectorStore:
             )
 
         return retrieved_chunks
+    
