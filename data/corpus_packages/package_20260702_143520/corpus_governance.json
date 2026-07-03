@@ -1,0 +1,16 @@
+{
+    "schema_version": "1.0.0",
+    "exact_duplicates": [
+        [
+            "policy.pdf",
+            "policy_backup.pdf"
+        ]
+    ],
+    "cross_format_duplicates": [
+        [
+            "employee.pdf",
+            "employee.docx",
+            "employee.txt"
+        ]
+    ]
+}
