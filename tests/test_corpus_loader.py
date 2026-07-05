@@ -1,7 +1,7 @@
 
 
-import sys
-sys.path.append(r'F:\mycode\rag_knowledge_assistant')
+# import sys
+# sys.path.append(r'F:\mycode\rag_knowledge_assistant')
 from ingestion.corpus_loader import CorpusLoader
 
 loader = CorpusLoader()

@@ -1,112 +1,78 @@
-from schema.corpus_snapshot import CorpusSnapshot
-from schema.knowledge_base import DocumentRecord, KnowledgeBase
 
+from schema.corpus_snapshot import CorpusSnapshot
+from schema.deduplication_result import DeduplicationResult
+from schema.knowledge_base import KnowledgeBase
 
 class Deduplication:
     """
-    Filter duplicate documents before ingestion.
+    Remove duplicate documents before ingestion into the knowledge base.
 
-    Responsibilities:
-        - Skip documents marked as duplicates by Project 1 governance.
-        - Skip documents already existing in the KnowledgeBase.
-        - Update governance statistics.
+    Deduplication consists of two stages:
 
-    This class does NOT:
-        - Detect duplicates
-        - Import documents
-        - Generate embeddings
+    1. Remove duplicate documents inside the corpus package.
+    2. Remove documents already existing in the knowledge base.
     """
 
-    def filter(
+    def deduplicate(
         self,
-        kb: KnowledgeBase,
         snapshot: CorpusSnapshot,
-    ) -> list[DocumentRecord]:
+        knowledge_base: KnowledgeBase,
+    ) -> DeduplicationResult:
         """
-        Filter duplicate documents.
-
-        Args:
-            kb: Current knowledge base.
-            snapshot: Governed corpus snapshot.
-
-        Returns:
-            Documents ready for incremental ingestion.
+        Remove duplicate documents before ingestion.
         """
 
-        documents = self._filter_governance_duplicates(snapshot)
+        # Create working copies.
+        documents = snapshot.documents.copy()
+        chunks = snapshot.chunks.copy()
 
-        documents = self._filter_kb_duplicates(
-            kb,
+        # Collector.
+        skipped_documents = []
+
+        # Stage 1: Remove duplicates inside the corpus package.
+        documents, chunks = self._remove_package_duplicates(
             documents,
+            chunks,
+            snapshot.governance,
+            skipped_documents,
         )
 
-        return documents
-
-    def _filter_governance_duplicates(
-        self,
-        snapshot: CorpusSnapshot,
-    ) -> list[DocumentRecord]:
-        """
-        Remove documents already identified as duplicates by Project 1.
-        """
-
-        skip_documents = (
-            set(snapshot.governance.exact_duplicates)
-            | set(snapshot.governance.cross_format_duplicates)
+        # Stage 2: Remove documents already existing in the knowledge base.
+        documents, chunks = self._remove_knowledge_base_duplicates(
+            documents,
+            chunks,
+            knowledge_base,
+            skipped_documents,
         )
 
-        filtered = []
+        return DeduplicationResult(
+            documents=documents,
+            chunks=chunks,
+            skipped_documents=skipped_documents,
+        )
 
-        skipped = 0
-
-        for document in snapshot.documents:
-
-            if document.doc_id in skip_documents:
-                skipped += 1
-                continue
-
-            filtered.append(document)
-
-        snapshot.governance.duplicate_skipped = skipped
-
-        return filtered
-
-    def _filter_kb_duplicates(
+    def _remove_package_duplicates(
         self,
-        kb: KnowledgeBase,
-        documents: list[DocumentRecord],
-    ) -> list[DocumentRecord]:
+        documents,
+        chunks,
+        governance,
+        skipped_documents,
+    ):
         """
-        Remove documents already existing in the KnowledgeBase.
+        Remove duplicate documents within the corpus package.
         """
+        pass
+        return documents, chunks
 
-        existing_hashes = self._build_hash_set(kb)
-
-        filtered = []
-
-        skipped = 0
-
-        for document in documents:
-
-            if document.document_hash in existing_hashes:
-                skipped += 1
-                continue
-
-            filtered.append(document)
-
-        kb.governance.duplicate_skipped += skipped
-
-        return filtered
-
-    @staticmethod
-    def _build_hash_set(
-        kb: KnowledgeBase,
-    ) -> set[str]:
+    def _remove_knowledge_base_duplicates(
+        self,
+        documents,
+        chunks,
+        knowledge_base,
+        skipped_documents,
+    ):
         """
-        Build a hash set from existing documents.
+        Remove documents that already exist in the knowledge base.
         """
-
-        return {
-            document.document_hash
-            for document in kb.documents
-        }
+        pass
+        return documents, chunks

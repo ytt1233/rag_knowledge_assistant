@@ -6,6 +6,7 @@ from schema.corpus_snapshot import CorpusSnapshot
 from schema.corpus_governance import CorpusGovernance
 from schema.knowledge_base import DocumentRecord
 from schema.chunk import Chunk
+from schema.corpus_governance import CorpusGovernance,DuplicateGroup
 
 
 class CorpusLoader:
@@ -37,12 +38,13 @@ class CorpusLoader:
         Returns:
             A runtime CorpusSnapshot.
         """
-        documents = self._load_documents(package_path)
+        documents, chunks = self._load_documents(package_path)
 
         governance = self._load_governance(package_path)
 
         return CorpusSnapshot(
             documents=documents,
+            chunks=chunks,
             governance=governance,
         )
 
@@ -60,6 +62,7 @@ class CorpusLoader:
             A list of DocumentRecord objects.
         """
         documents: list[DocumentRecord] = []
+        all_chunks = []
 
         governed_docs_dir = Path(package_path) / "governed_docs"
         print(f'package_path:{Path(package_path) }')
@@ -73,11 +76,13 @@ class CorpusLoader:
 
             chunks = self.jsonl_loader.load(str(jsonl_file))
 
+            all_chunks.extend(chunks)
+
             documents.extend(
                 self._build_document_records(chunks)
             )
 
-        return documents
+        return documents, all_chunks
 
     def _build_document_records(
         self,
@@ -164,23 +169,27 @@ class CorpusLoader:
                 f"Governance file not found: {governance_file}"
             )
 
-        with governance_file.open(
-            "r",
-            encoding="utf-8"
-        ) as f:
+        with open(governance_file, "r", encoding="utf-8") as f:
             data = json.load(f)
 
+        exact_duplicates = [
+            DuplicateGroup(
+                primary_doc=item["primary_doc"],
+                duplicates=item.get("duplicates", []),
+            )
+            for item in data.get("exact_duplicates", [])
+        ]
+
+        cross_format_duplicates = [
+            DuplicateGroup(
+                primary_doc=item["primary_doc"],
+                duplicates=item.get("duplicates", []),
+            )
+            for item in data.get("cross_format_duplicates", [])
+        ]
+
         return CorpusGovernance(
-            schema_version=data.get(
-                "schema_version",
-                "1.0.0",
-            ),
-            exact_duplicates=data.get(
-                "exact_duplicates",
-                [],
-            ),
-            cross_format_duplicates=data.get(
-                "cross_format_duplicates",
-                [],
-            ),
+            schema_version=data.get("schema_version", "1.0.0"),
+            exact_duplicates=exact_duplicates,
+            cross_format_duplicates=cross_format_duplicates,
         )

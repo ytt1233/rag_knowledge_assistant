@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from schema.corpus_governance import CorpusGovernance
 from schema.knowledge_base import DocumentRecord
+from schema.chunk import Chunk
 
 
 @dataclass
@@ -15,3 +16,4 @@ class CorpusSnapshot:
 
     documents: list[DocumentRecord]
     governance: CorpusGovernance
+    chunks: list[Chunk]

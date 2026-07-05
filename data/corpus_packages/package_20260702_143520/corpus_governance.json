@@ -1,16 +1,22 @@
 {
-    "schema_version": "1.0.0",
-    "exact_duplicates": [
-        [
-            "policy.pdf",
-            "policy_backup.pdf"
-        ]
-    ],
-    "cross_format_duplicates": [
-        [
-            "employee.pdf",
-            "employee.docx",
-            "employee.txt"
-        ]
-    ]
+  "schema_version": "1.0.0",
+
+  "exact_duplicates": [
+    {
+      "primary_doc": "policy.pdf",
+      "duplicates": [
+        "policy_backup.pdf"
+      ]
+    }
+  ],
+
+  "cross_format_duplicates": [
+    {
+      "primary_doc": "employee.pdf",
+      "duplicates": [
+        "employee.docx",
+        "employee.txt"
+      ]
+    }
+  ]
 }
