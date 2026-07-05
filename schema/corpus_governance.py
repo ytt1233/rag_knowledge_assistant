@@ -22,7 +22,9 @@ class CorpusGovernance:
     """
     Governance information produced by Project1.
 
-    This object is read-only in Project2.
+    This object is read-only in Project2 and
+    describes duplicate documents detected during
+    corpus governance.
     """
 
     schema_version: str = "1.0.0"

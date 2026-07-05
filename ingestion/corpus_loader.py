@@ -65,7 +65,6 @@ class CorpusLoader:
         all_chunks = []
 
         governed_docs_dir = Path(package_path) / "governed_docs"
-        print(f'package_path:{Path(package_path) }')
 
         if not governed_docs_dir.exists():
             raise FileNotFoundError(

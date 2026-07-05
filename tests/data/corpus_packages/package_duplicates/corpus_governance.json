@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+
+  "exact_duplicates": [
+    {
+      "primary_doc": "2024年第二季度战略复盘暨第三季度工作部署会议纪要",
+      "duplicates": [
+        "华锦股份：2025年年度报告摘要"
+      ]
+    }
+  ],
+
+  "cross_format_duplicates": []
+}
