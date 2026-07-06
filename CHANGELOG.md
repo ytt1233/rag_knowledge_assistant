@@ -19,13 +19,23 @@ The format is inspired by **Keep a Changelog**.
 * Added `DeduplicationResult` for standardized deduplication output.
 * Added reusable test environment for deduplication tests.
 
+* Introduced the `ChunkEmbedding` data model.
+* Added `BaseEmbedding` as the abstract interface.
+* Implemented `OllamaEmbedding`.
+
 ### Tests
 
 * Added `test_no_duplicates()`
 * Added `test_package_duplicates()`
 * Added `test_knowledge_base_duplicates()`
 
+* Added `test_embed_success()`
+* Added `test_empty_chunks()`
+* Added `test_embedding_dimension()`
+
 ### Refactored
 
 * Unified duplicate removal workflow using in-place collection updates.
 * Improved duplicate group representation with `DuplicateGroup`.
+* Refactored the embedding module with interface-based architecture
+
