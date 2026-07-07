@@ -34,29 +34,56 @@ The format is inspired by **Keep a Changelog**.
 * Added semantic vector search.
 * Introduced the `SearchResult` data model for retrieval results.
 
+#### Retriever
+
+* Added `BaseRetriever` as the abstract retrieval interface.
+* Implemented `VectorRetriever`.
+* Connected embedding and vector search into a unified retrieval pipeline.
+
+#### Reranker
+
+* Added `BaseReranker` as the abstract reranking interface.
+* Implemented `FlagEmbeddingReranker` for cross-encoder reranking.
+
 ### Tests
 
 #### Deduplication
 
-* Added `test_no_duplicates()`
-* Added `test_package_duplicates()`
-* Added `test_knowledge_base_duplicates()`
+
+* Added `test_deduplication()`
+ - `test_no_duplicates()`
+ - `test_package_duplicates()`
+ - `test_knowledge_base_duplicates()`
 
 #### Embedding
 
-* Added `test_embed_success()`
-* Added `test_empty_chunks()`
-* Added `test_embedding_dimension()`
+* Added `test_ollama_embedding()`
+ - `test_embed_success()`
+ - `test_empty_chunks()`
+ - `test_embedding_dimension()`
 
 #### Vector Store
 
-* Added `test_create_collection()`
-* Added `test_insert()`
-* Added `test_search()`
+* Added `test_milvus_vector_store()`
+ - `test_create_collection()`
+ - `test_insert()`
+ - `test_search()`
+
+#### Retriever
+
+* Added `test_vector_retriever()`
+ - `test_retrieve()`
+
+#### Reranker
+
+* Added `test_flag_embedding_reranker()`
+ - `test_rerank()`
 
 ### Refactored
 
 * Unified duplicate removal workflow using in-place collection updates.
 * Improved duplicate group representation with `DuplicateGroup`.
 * Refactored the embedding module with interface-based architecture.
-* Unified vector store interfaces for future retriever integration.
+* Refactored the vector store module with interface-based architecture.
+* Refactored the retrieval module with interface-based architecture.
+* Refactored the reranker module with interface-based architecture.
