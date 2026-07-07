@@ -49,20 +49,6 @@ class OllamaEmbedding(BaseEmbedding):
                 response.embeddings
             )
         ]
-    def embed_query(
-        self,
-        query: str
-    ) -> list[float]:
-        """
-        Generate embedding for a query.
-        """
-
-        response = self.client.embed(
-            model=self.model_name,
-            input=[query]
-        )
-
-        return response.embeddings[0]
 
     @property
     def embedding_dim(self) -> int:

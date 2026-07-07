@@ -24,3 +24,10 @@ class BaseEmbedding(ABC):
             List of chunk embeddings.
         """
         pass
+
+    @abstractmethod
+    def embed_query(
+        self,
+        query: str
+    ) -> list[float]:
+        pass
