@@ -4,14 +4,17 @@ RAG Knowledge Assistant 是系统基于 **Milvus + BGE-M3 + BGE-Reranker-v2-M3 +
 
 该项目实现了完整的RAG流程，包含：
 
-* 治理后知识资产加载（Governed JSONL）
+* 治理后语料包加载（Governed Corpus Package）
 * 多文档知识库构建
+* 知识库管理与持久化
 * 批量数据导入流水线
+* 文档去重与增量导入准备
 * 向量嵌入生成
 * 基于Milvus的向量存储
 * 语义检索与重排序
 * 基于元数据的检索过滤
 * 大模型答案生成与引用溯源 
+
 
 它可作为企业级知识库问答系统的基础框架。
 
@@ -24,9 +27,11 @@ A local Retrieval-Augmented Generation (RAG) Knowledge Assistant built with:
 
 The project implements a complete RAG pipeline including:
 
-* Document ingestion and governance-ready asset loading
+* Governed corpus package ingestion
 * Multi-document knowledge base construction
+* Knowledge base management and persistence
 * Batch ingestion pipeline
+* Document deduplication and incremental ingestion preparation
 * Embedding generation
 * Vector storage with Milvus
 * Semantic retrieval and reranking
@@ -45,7 +50,7 @@ It can serve as a foundation for enterprise knowledge base Q&A systems.
 - 年报分析
 - 制度检索
 - 知识查询
-- AI知识助手
+- 企业级 RAG 知识助手
 
 This project simulates an enterprise knowledge base assistant.
 
@@ -55,7 +60,7 @@ Typical use cases include:
 - Annual report analysis
 - Internal policy search
 - Knowledge retrieval and summarization
-- RAG-based AI assistants
+- Enterprise RAG knowledge assistants
 
 ---
 
@@ -67,15 +72,14 @@ Typical use cases include:
 Unstructured Data Governance
 
 输出：
-Governed Knowledge Assets
-(JSONL + Metadata + Hash)
+Governed Corpus Package
+(JSONL + Metadata + Hash + Governance Report)
 
 当前项目：
 RAG Knowledge Assistant
 
-本项目消费治理后的知识资产，
-实现企业知识检索、重排序、
-答案生成和引用溯源。
+本项目消费治理后的语料包，完成知识库构建、文档去重、向量化存储，并提供企业级
+知识检索、重排序、答案生成与引用溯源能力。
 
 This project is the downstream component of the
 Knowledge Engineering roadmap.
@@ -84,36 +88,39 @@ Upstream Project:
 Unstructured Data Governance
 
 Output:
-Governed Knowledge Assets
-(JSONL + Metadata + Hash)
+Governed Corpus Package
+(JSONL + Metadata + Hash + Governance Report)
 
 Current Project:
 RAG Knowledge Assistant
 
-The system consumes governance-ready knowledge assets
-and provides enterprise knowledge retrieval,
-reranking, answer generation, and citation tracing. 
+The system consumes governance-ready corpus packages,
+builds and manages knowledge bases, performs document
+deduplication and vector indexing, and provides
+enterprise-grade retrieval, reranking, answer generation,
+and citation tracing. 
 
 ---
 
 # 🏗️ 系统架构  | System Architecture
 
-<img src="img/系统架构图.svg" width="800" height="600"> 
+<img src="img/系统架构图.svg" width="400" height="600"> 
 
 ---
 
-# ✨ 项目亮点
+# ✨ 项目亮点 | Highlights
 
-* 🔒 完全本地化部署（Ollama + Milvus）| Fully Local RAG Deployment (Ollama + Milvus)
-* 📚 多文档知识库构建 | Multi-Document Knowledge Base
+* 📚 知识库管理与持久化 | Knowledge Base Management and Persistence
+* 📦 治理后语料包导入 | Governed Corpus Package Ingestion
+* 🧹 文档去重与增量导入准备 | Document Deduplication and Incremental Ingestion Preparation
 * ⚡ 批量数据导入流水线 | Batch Ingestion Pipeline
-* 🗂 集合管理 | Collection Management
-* 🏷 元数据过滤 | Metadata Filtering
-* 🔍 BGE-M3 语义检索 | Semantic Retrieval with BGE-M3
+* 🔒 完全本地化部署（Ollama + Milvus） | Fully Local RAG Deployment (Ollama + Milvus)
+* 🔍 BGE-M3 向量检索 | Vector Retrieval with BGE-M3
+* 🏷 元数据过滤检索 | Metadata-aware Retrieval
 * 🎯 BGE-Reranker-v2-M3 重排序 | Reranking with BGE-Reranker-v2-M3
-* 🤖 Qwen2.5 大模型回答生成 | LLM-based Answer Generation with Qwen2.5
-* 📖 Citation 引用溯源 | Citation Tracking and Source Attribution
-* 🌐 FastAPI REST API 服务化 | FastAPI-based RESTful API Service  
+* 🤖 Qwen2.5 大模型答案生成 | LLM-based Answer Generation with Qwen2.5
+* 📖 引用溯源 | Citation Tracking and Source Attribution
+* 🌐 FastAPI REST API 服务 | FastAPI-based RESTful API Service 
 
 ---
 
@@ -122,68 +129,72 @@ reranking, answer generation, and citation tracing.
 | Category           | Technology         |
 | ------------------ | ------------------ |
 | Language           | Python 3.11        |
-| API Framework      | FastAPI            |
+| Web Framework      | FastAPI            |
 | LLM                | Qwen2.5            |
 | Embedding Model    | BGE-M3             |
 | Reranker           | BGE-Reranker-v2-M3 |
 | Vector Database    | Milvus             |
-| Model Runtime      | Ollama             |
+| Model Serving      | Ollama             |
 | Container Runtime  | Docker             |
 
 ---
 
-# 🔄 工作流 | RAG Workflow
+# 🔄 工作流 | End-to-End Workflow
 
-```text
-Governed JSONL Files
-↓
-Batch Ingestion Pipeline
-↓
-JSONL Loader
-↓
-Chunk Objects
-↓
+### 1、 Ingestion Pipeline（离线） 
+
+```
+Governed Corpus Package
+        │
+        ▼
+CorpusLoader
+        │
+        ▼
+KnowledgeBaseManager
+        │
+        ▼
+Deduplication
+        │
+        ▼
 Embedding (BGE-M3)
-↓
-Milvus Collection
-↓
+        │
+        ▼
+Milvus Vector Store
+        │
+        ▼
+Knowledge Base Update
+```
+
+Build and maintain the enterprise knowledge base from governance-ready corpus packages.
+
+### 2、Query Pipeline（在线） 
+
+```
+User Query
+        │
+        ▼
+Query Embedding (BGE-M3)
+        │
+        ▼
+Vector Retrieval
+        │
+        ▼
 Metadata Filtering
-↓
-Semantic Retrieval
-↓
+        │
+        ▼
 Reranking (BGE-Reranker-v2-M3)
-↓
+        │
+        ▼
+Prompt Builder
+        │
+        ▼
 Qwen2.5
-↓
+        │
+        ▼
 Answer + Citation
-``` 
-Multiple governed documents can be ingested into a single Milvus collection,
-forming a unified knowledge base while preserving document-level metadata.
-
----
-
-
-
-# 💡 例子 | Example
-
-### Question
-
-```text
-2025年归属于上市公司股东的净利润是多少？
 ```
 
-### Answer
-
-```text
-2025年归属于上市公司股东的净利润为
--1,763,294,889.03元。
-```
-
-### Citation
-
-```text
-[1] 北方华锦化学工业股份有限公司2025年年度报告摘要（第2页）
-```
+Retrieve, rerank, and generate grounded answers with source citations.
 
 ---
 
@@ -201,8 +212,6 @@ Swagger UI:
 http://127.0.0.1:8000/docs
 ```
 
----
-
 ## Chat API
 
 ### Request
@@ -217,15 +226,19 @@ http://127.0.0.1:8000/docs
 
 ```json
 {
-  "answer": "2025年归属于上市公司股东的净利润为-1,763,294,889.03元。",
+  "query": "2025年归属于上市公司股东的净利润是多少？",
+  "answer": "根据提供的信息，2025年归属于上市公司股东的净利润为-1,763,294,889.03元。",
   "citations": [
-    {
-      "title": "北方华锦化学工业股份有限公司2025年年度报告摘要",
-      "page": 2
-    }
+    "北方华锦化学工业股份有限公司2025年年度报告摘要 (Page 2)",
+    "北方华锦化学工业股份有限公司2025年年度报告摘要 (Page 1)"
   ]
 }
 ```
+
+截图如下：
+
+<img src="img/问答.png" width="600" height="400">
+
 
 ---
 
@@ -249,7 +262,7 @@ pip install -r requirements.txt
 docker compose up -d
 ```
 
-## 4. Model Preparation
+## 4. Prepare Models
 
 ### Ollama Models
 
@@ -278,44 +291,54 @@ Configure the local model path in:
 ```python
 retriever/reranker.py
 ```
-## 5. Prepare Knowledge Assets
+## 5. Prepare Corpus Package
 
-#### Place governed JSONL files into:
+#### Place a governed corpus package into:
 
-data/governed_docs/
+data/corpus_packages/
 
 #### Example:
 
-data/governed_docs/
+```
+data/corpus_packages/
 
-├── strategy_meeting.jsonl 
+└── package_20260702_143520/
+    ├── governed_docs/
+    ├── corpus_governance.json
+    ├── dataset_report.json
+    └── manifest.json 
+```
 
-├── annual_report.jsonl 
-
-├── product_plan.jsonl  
-
-
-## 6. Build Knowledge Base
+## 6. Build / Update Knowledge Base
 
 #### Run batch ingestion:
 
+```
 python -m tests.test_batch_ingestion
+```
 
 #### This step will:
 
-Load multiple governed JSONL documents 
+• Load the governed corpus package
 
-Generate embeddings with BGE-M3 
+• Build or load the knowledge base
 
-Store vectors in Milvus 
+• Remove duplicated documents
 
-Build a unified multi-document knowledge base 
+• Generate embeddings with BGE-M3
+
+• Store vectors in Milvus
+
+• Update the knowledge base metadata
 
 ## 7. Run Application
 
 ```bash
 python main.py
 ```
+Open Swagger UI:
+
+http://127.0.0.1:8000/docs
 
 ---
 
@@ -343,12 +366,15 @@ python main.py
 
 ## v1.2.0
 
-* [ ] Deduplicated Knowledge Base
-* [ ] Incremental Ingestion Preparation
-* [ ] Corpus Quality Monitoring
+* [√] Governed Corpus Package Ingestion
+* [√] Knowledge Base Management
+* [√] Document Deduplication
+* [√] Batch Ingestion Pipeline
+* [√] Integration Testing
 
 ## v1.3.0
 
+* [ ] Incremental Ingestion
 * [ ] Hybrid Search (BM25 + Vector)
 * [ ] Metadata-Aware Retrieval
 * [ ] Table-Aware Retrieval

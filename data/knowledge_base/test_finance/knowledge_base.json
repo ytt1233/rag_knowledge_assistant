@@ -1,0 +1,26 @@
+{
+    "metadata": {
+        "collection_name": "test_finance",
+        "schema_version": "1.0.0",
+        "created_at": "2026-07-10T11:35:05.344468"
+    },
+    "status": {
+        "document_count": 2,
+        "chunk_count": 23,
+        "embedding_count": 23,
+        "last_ingestion_time": "2026-07-10T11:35:20.128662",
+        "last_updated_time": "2026-07-10T11:35:20.128662"
+    },
+    "documents": [
+        {
+            "doc_id": "2024年第二季度战略复盘暨第三季度工作部署会议纪要",
+            "document_hash": "45ece6c59ff33fd57f4c2d84ee8dc8582b092a8ccd42a0d32e089de78da4b715",
+            "status": "active"
+        },
+        {
+            "doc_id": "华锦股份：2025年年度报告摘要",
+            "document_hash": "3dfceba84fb1071ded4ae8affa504822fa0a029d236a56a192f6bbe9424b78ed",
+            "status": "active"
+        }
+    ]
+}

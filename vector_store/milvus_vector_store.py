@@ -20,18 +20,32 @@ class MilvusVectorStore(BaseVectorStore):
         """Check if the collection exists."""
         return self.client.has_collection(self.collection_name)
 
+    def drop_collection(self) -> None:
+        """
+        删除 Collection
+        """
+        if self.has_collection():
+            self.client.drop_collection(
+                collection_name=self.collection_name
+            )
+
+            print(
+                f"Collection '{self.collection_name}' dropped."
+            )
+        else:
+            print(
+                f"Collection '{self.collection_name}' does not exist."
+            )
     def create_collection(
         self,
         embedding_dim: int
     ) -> None:
         """Create a collection in Milvus."""
-        dim=embedding_dim
+
         if self.has_collection():
-            print(
-                f"Collection '{self.collection_name}' already exists."
-            )
             return
-        
+        dim = embedding_dim
+
         schema = self.client.create_schema( 
             auto_id=False,
             enable_dynamic_field=False
@@ -142,9 +156,9 @@ class MilvusVectorStore(BaseVectorStore):
         )
 
         print(
-            f"Inserted {len(data)} chunks."
+            f"Milvus: inserted {len(data)} chunks."
         )
-    
+        
     def search(
         self,
         query_embedding: list[float],
@@ -165,9 +179,9 @@ class MilvusVectorStore(BaseVectorStore):
 
         filter_expr = None
         if filters:
-            expressions = [f'{field} = "{value}"' for field, value in filters.items()]
+            expressions = [f'{field} == "{value}"' for field, value in filters.items()]
             filter_expr = " AND ".join(expressions)
-
+        print(f'filter_expr: {filter_expr}')
         results = self.client.search(
             collection_name=self.collection_name,
             data=[query_embedding],
@@ -187,7 +201,7 @@ class MilvusVectorStore(BaseVectorStore):
         )
 
         search_results = []
-
+        print(f'results[0]: {len(results[0])}')
         for hit in results[0]:
 
             entity = hit["entity"]

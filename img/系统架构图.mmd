@@ -1,0 +1,25 @@
+flowchart TD
+    subgraph Offline[span style='colorwhite;'Offline Knowledge Buildingspan]
+        A[Governed Corpus Packagebr]
+        B[div style='text-align left;'Batch Ingestion Pipelinebr• CorpusLoaderbr• KnowledgeBaseManagerbr• Deduplicationbr• Embedding br• Milvus Vector Storediv]
+        A -- B
+    end
+
+    C[div style='text-align left;'Knowledge Basebr• knowledge_base.jsonbr• Milvus Collectiondiv]
+    class C highlight
+
+    subgraph Online[span style='colorwhite;'Online Question Answeringspan]
+        D[div style='text-align left;'RAG Pipelinebr• Vector Retrieverbr• FlagEmbedding Rerankerbr• Prompt Builderbr• Ollama Generatorbr• Citation Formatterdiv]
+        E[FastAPI REST API]
+        D -- E
+    end
+
+    B -- C
+    C -- D
+
+    classDef highlight fill#FFD700,stroke#333,stroke-width6px,color#000,font-size16px,font-weightbold;
+
+    style Offline filltransparent,strokewhite,stroke-width2px,stroke-dasharray 5 5
+    style Online filltransparent,strokewhite,stroke-width2px,stroke-dasharray 5 5
+
+    linkStyle default strokewhite,stroke-width2px;

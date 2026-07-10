@@ -6,17 +6,29 @@ The format is inspired by **Keep a Changelog**.
 
 ---
 
-## [v1.2.0] - 2026-07-05
+## [v1.2.0] - 2026-07-10
 
 ### Added
 
+#### Knowledge Base 
+
+* Added `KnowledgeBaseManager` for knowledge base lifecycle management.
+* Added knowledge base metadata persistence.
+* Added knowledge base metadata update mechanism.
+
+#### Batch Ingestion
+
 * Implemented `CorpusLoader` to load governed corpus packages.
 * Added `CorpusSnapshot` as the unified ingestion data model.
+* Added governed corpus package support.
+* Added end-to-end batch ingestion pipeline.
+
+#### Deduplication
+
 * Implemented two-stage deduplication:
   * Package-level duplicate removal
   * Knowledge base duplicate removal
 * Added `DeduplicationResult` for standardized deduplication output.
-* Added reusable test environment for deduplication tests.
 
 #### Embedding
 
@@ -45,39 +57,61 @@ The format is inspired by **Keep a Changelog**.
 * Added `BaseReranker` as the abstract reranking interface.
 * Implemented `FlagEmbeddingReranker` for cross-encoder reranking.
 
+#### API
+
+* Updated FastAPI service to the new dependency injection architecture.
+* Integrated the refactored RAG pipeline.
+
 ### Tests
+
+#### Batch Ingestion
+
+* Added `test_batch_ingestion()`
+* Added `test_batch_ingestion_pipeline()`
+
+#### Corpus Loader
+
+* Added `test_corpus_loader()`
+
+#### Knowledge Base
+
+* Added `test_knowledge_base_manager()`
+
+#### Metadata Filtering
+
+* Added `test_metadata_filter()`
 
 #### Deduplication
 
-
 * Added `test_deduplication()`
- - `test_no_duplicates()`
- - `test_package_duplicates()`
- - `test_knowledge_base_duplicates()`
+  * `test_no_duplicates()`
+  * `test_package_duplicates()`
+  * `test_knowledge_base_duplicates()`
 
 #### Embedding
 
 * Added `test_ollama_embedding()`
- - `test_embed_success()`
- - `test_empty_chunks()`
- - `test_embedding_dimension()`
+  * `test_embed_success()`
+  * `test_empty_chunks()`
+  * `test_embedding_dimension()`
 
 #### Vector Store
 
 * Added `test_milvus_vector_store()`
- - `test_create_collection()`
- - `test_insert()`
- - `test_search()`
+  * `test_create_collection()`
+  * `test_insert()`
+  * `test_search()`
 
 #### Retriever
 
 * Added `test_vector_retriever()`
- - `test_retrieve()`
+  * `test_retrieve()`
 
 #### Reranker
 
 * Added `test_flag_embedding_reranker()`
- - `test_rerank()`
+  * `test_rerank()`
+
 
 ### Refactored
 
@@ -87,3 +121,12 @@ The format is inspired by **Keep a Changelog**.
 * Refactored the vector store module with interface-based architecture.
 * Refactored the retrieval module with interface-based architecture.
 * Refactored the reranker module with interface-based architecture.
+* Refactored RAGPipeline with dependency injection.
+
+### Documentation
+
+* Updated README.
+* Updated system architecture.
+* Updated workflow.
+* Updated Quick Start.
+* Updated Roadmap.

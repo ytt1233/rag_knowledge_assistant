@@ -10,9 +10,8 @@ class Metadata:
     """
 
     collection_name: str
-    schema_version: str = "1.2.0"
+    schema_version: str = "1.0.0"#表示 KnowledgeBase 数据模型版本，与项目（Git Release）版本独立管理
     created_at: str = ""
-    updated_at: str = ""
 
 @dataclass
 class DocumentRecord:
@@ -57,10 +56,8 @@ class KnowledgeBase:
     A governed business knowledge base.
     """
 
-    metadata: Metadata
+    metadata: Metadata#KnowledgeBase 的静态属性（Identity）
 
-    status: KnowledgeBaseStatus = field(default_factory=KnowledgeBaseStatus)
-
-    governance: KnowledgeBaseGovernance = field(default_factory=KnowledgeBaseGovernance)
+    status: KnowledgeBaseStatus = field(default_factory=KnowledgeBaseStatus)#KnowledgeBase 的动态状态（Current State）
 
     documents: list[DocumentRecord] = field(default_factory=list)

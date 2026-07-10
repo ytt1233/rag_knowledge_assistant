@@ -15,7 +15,7 @@ class FlagEmbeddingReranker(BaseReranker):
         use_fp16: bool = False
     ):
         self.reranker = FlagReranker(
-            model_name,
+            r"D:\models\bge-reranker-v2-m3",
             use_fp16=use_fp16
         )
 
