@@ -104,7 +104,7 @@ and citation tracing.
 
 # 🏗️ 系统架构  | System Architecture
 
-<img src="img/系统架构图.svg" width="400" height="600"> 
+<img src="img/系统架构图.svg" width="1000"> 
 
 ---
 
