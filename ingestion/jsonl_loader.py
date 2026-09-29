@@ -24,7 +24,8 @@ class JSONLLoader:
                     doc_id=data["doc_id"],
                     text=data["text"],
                     page_num=data["page_num"],
-                    metadata=metadata
+                    metadata=metadata,
+                    structure_context=data.get("structure_context",{})
                 )
 
                 chunks.append(chunk)

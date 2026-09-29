@@ -14,7 +14,7 @@ from pipeline.batch_ingestion_pipeline import BatchIngestionPipeline
 
 def test_batch_ingestion():
 
-    collection_name = "test_finance"
+    collection_name = "insurance"
 
     kb_manager = KnowledgeBaseManager()
 
@@ -43,7 +43,7 @@ def test_batch_ingestion():
         kb_manager=kb_manager,
     )
     
-    package_dir = "data/corpus_packages/package_20260702_143520"
+    package_dir = "data/corpus_packages/package_20260820_173256"
 
     #Step3 第一次导入
     result = pipeline.run(
@@ -56,11 +56,11 @@ def test_batch_ingestion():
 
     kb = kb_manager.load(collection_name)
 
-    assert kb.status.document_count == 2
-    assert kb.status.chunk_count == 23
-    assert kb.status.embedding_count == 23
+    assert kb.status.document_count == 1
+    assert kb.status.chunk_count == 90
+    assert kb.status.embedding_count == 90
 
-    assert len(kb.documents) == 2
+    assert len(kb.documents) == 1
 
     print("KnowledgeBase verification passed.")
 
@@ -73,7 +73,7 @@ def test_batch_ingestion():
     #Step6 验证 Deduplication
     assert result2["documents"] == 0
     assert result2["chunks"] == 0
-    assert result2["skipped_documents"] == 2
+    assert result2["skipped_documents"] == 1
 
     print("Deduplication verification passed.")
 

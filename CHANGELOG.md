@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is inspired by **Keep a Changelog**.
 
 ---
+## [v1.2.1] - 2026-09-29
+
+### Added
+
+#### RAG Search
+
+* Added structured filtering by document structure path.
+* Added retrieval support for insurance exclusion clauses and definitions.
+* Integrated metadata filtering with vector retrieval and reranking.
+
+#### Project3 Integration
+
+* Added RAG search support for Project3 through the `/search` and `/answer` API.
+* Enabled Project3 `KnowledgeEngine` to retrieve relevant insurance clauses and definitions.
+* Provided retrieval results for downstream exclusion assessment.
+
+### Tests
+
+#### RAG Search
+
+* Added `test_insurance_rag_pipeline()`
 
 ## [v1.2.0] - 2026-07-10
 

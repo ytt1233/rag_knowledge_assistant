@@ -38,6 +38,7 @@ class CorpusLoader:
         Returns:
             A runtime CorpusSnapshot.
         """
+  
         documents, chunks = self._load_documents(package_path)
 
         governance = self._load_governance(package_path)

@@ -4,6 +4,7 @@ from reranker.base_reranker import BaseReranker
 from schema.search_result import SearchResult
 
 
+
 class FlagEmbeddingReranker(BaseReranker):
     """
     Reranker implementation based on FlagEmbedding.

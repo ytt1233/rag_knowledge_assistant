@@ -1,0 +1,21 @@
+{
+    "metadata": {
+        "collection_name": "insurance",
+        "schema_version": "1.0.0",
+        "created_at": "2026-09-28T16:46:33.256222"
+    },
+    "status": {
+        "document_count": 1,
+        "chunk_count": 90,
+        "embedding_count": 90,
+        "last_ingestion_time": "2026-09-28T16:46:58.909357",
+        "last_updated_time": "2026-09-28T16:46:58.909357"
+    },
+    "documents": [
+        {
+            "doc_id": "意外险保险条款-2021.pdf",
+            "document_hash": "69f9e6558cd847a78e44400c4c5f6bb928829e1b088b88e7e57d740504d7b350",
+            "status": "active"
+        }
+    ]
+}

@@ -82,10 +82,17 @@ class BatchIngestionPipeline:
         self.kb_manager.save(kb)
 
         print("\nBatch ingestion completed.")
+
+        print("=" * 60)
+        print("Knowledge Base Build Result")
+        print("=" * 60)
+
         print(f"Collection          : {collection_name}")
-        print(f"Inserted documents  : {len(result.documents)}")
-        print(f"Inserted chunks     : {len(result.chunks)}")
-        print(f"Skipped documents   : {len(result.skipped_documents)}")
+        print(f"Documents inserted  : {len(result.documents)}")
+        print(f"Chunks inserted     : {len(result.chunks)}")
+        print(f"Documents skipped   : {len(result.skipped_documents)}")
+
+        print("=" * 60)
 
         return {
             "collection": collection_name,

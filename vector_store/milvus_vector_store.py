@@ -88,6 +88,12 @@ class MilvusVectorStore(BaseVectorStore):
         )
 
         schema.add_field(
+            field_name="structure_path",
+            datatype=DataType.VARCHAR,
+            max_length=255
+        )
+
+        schema.add_field(
             field_name="embedding",
             datatype=DataType.FLOAT_VECTOR,
             dim=dim
@@ -146,6 +152,7 @@ class MilvusVectorStore(BaseVectorStore):
                     "category": chunk.metadata.get_domain(
                         "category", ""
                     ),
+                    "structure_path": chunk.structure_context.get("structure_path", ""),
                     "embedding": chunk_embedding.embedding,
                 }
             )
@@ -179,9 +186,19 @@ class MilvusVectorStore(BaseVectorStore):
 
         filter_expr = None
         if filters:
-            expressions = [f'{field} == "{value}"' for field, value in filters.items()]
-            filter_expr = " AND ".join(expressions)
-        print(f'filter_expr: {filter_expr}')
+            if isinstance(filters, str):
+                # 如果传入的是字符串，直接透传给 Milvus，不再做 == 拼接
+                filter_expr = filters
+            elif isinstance(filters, dict):
+                expressions = [f'{field} == "{value}"' for field, value in filters.items()]
+                filter_expr = " AND ".join(expressions)
+        
+        # print('******************************************************************')
+        # print(f'collection_name: {self.collection_name}')
+        # # print(f'data: {[query_embedding]}')
+        # print(f'limit: {top_k}')
+        # print(f'filter_expr: {filter_expr}')
+        
         results = self.client.search(
             collection_name=self.collection_name,
             data=[query_embedding],
@@ -196,12 +213,13 @@ class MilvusVectorStore(BaseVectorStore):
                 "text",
                 "page_num",
                 "title",
-                "category"
+                "category",
+                "structure_path"
             ]
         )
 
         search_results = []
-        print(f'results[0]: {len(results[0])}')
+        # print(f'results[0]: {len(results[0])}')
         for hit in results[0]:
 
             entity = hit["entity"]
@@ -218,7 +236,10 @@ class MilvusVectorStore(BaseVectorStore):
                 chunk_id=entity["chunk_id"],
                 text=entity["text"],
                 page_num=entity["page_num"],
-                metadata=metadata
+                metadata=metadata,
+                structure_context={
+                    "structure_path": entity["structure_path"]
+                }
             )
 
             search_results.append(
